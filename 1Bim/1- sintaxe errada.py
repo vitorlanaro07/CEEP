@@ -1,5 +1,5 @@
 
-# Print("Olá")
+print("Olá")
 
 # o "P" da chamada print() está maiúsculo,
 # logo, vai ocorrer um erro
@@ -40,6 +40,6 @@
 # identação incorreta gera erro,
 # ou seja, há um espaço antes da função print():
 
-variavel = "testando o erro"
-    print(variavel) #erro
+# variavel = "testando o erro"
+#     print(variavel) #erro
 

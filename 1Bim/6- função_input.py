@@ -4,8 +4,18 @@
 # valores numericos, precisa ser convertido
 # para o tipo correto!
 
-print("Olá, informe seu nome:")
-nome = input()
+# print("Olá, informe seu nome:")
+# nome = input()
+
+print("Olá, informe um valor booleano:")
+var_bool = bool(input())
+
+print(var_bool)
+print(type(var_bool))
+
+# print(nome)
+
+
 
 print("Olá, informe sua idade:")
 idade = int(input())

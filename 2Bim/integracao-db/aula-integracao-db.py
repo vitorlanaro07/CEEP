@@ -18,9 +18,10 @@ while seletor != 0: #enquanto o seletor for diferente de 0, fique aqui ->
     print("1 - Cadastrar aluno")
     print("2 - Consultar aluno")
     print("3 - Listar todos os alunos")
+    print("4 - Atualizar dados do aluno")
+    print("5 - Deletar aluno")
     print("0 - Sair")
-
-    seletor = int(input("Selecione uma opção:"))
+    seletor = int(input("\nSelecione uma opção:"))
 
     if(seletor == 1):
         
@@ -87,15 +88,18 @@ while seletor != 0: #enquanto o seletor for diferente de 0, fique aqui ->
         
         sql = 'SELECT id_aluno, nome_aluno, sobrenome_aluno, data_nascimento FROM aluno WHERE nome_aluno LIKE %s;'
 
-        cursor.execute(sql, (busca,)) #importante a virgula, pois o sql reconhece como uma lista, um array...
+        cursor.execute(sql, (f'%{busca}%',)) #importante a virgula, pois o sql reconhece como uma lista, um array...
         resultado = cursor.fetchall()
-        print(resultado);
+        # print(resultado);
         if resultado:
-            print("\n-----Resultado da Busca-----")
-            print(f"ID: {resultado[0][0]}")
-            print(f"Nome: {resultado[0][1]} {resultado[0][2]}")
-            print(f"Data de nascimento: {resultado[0][3]}")
-            print("-" * 40 + "\n")
+            contador = 0
+            while contador < len(resultado):
+                print("\n-----Resultado da Busca-----")
+                print(f"ID: {resultado[contador][0]}")
+                print(f"Nome: {resultado[contador][1]} {resultado[contador][2]}")
+                print(f"Data de nascimento: {resultado[contador][3]}")
+                print("-" * 40 + "\n")
+                contador += 1
         else:
             print("\nNenhum aluno encontrado!\n")
         
@@ -118,7 +122,79 @@ while seletor != 0: #enquanto o seletor for diferente de 0, fique aqui ->
                 contador +=1
         else:
             print("\nNenhum aluno encontrado!\n")
+        cursor.close();
+    elif seletor == 4:
+        cursor = conexao.cursor();
+        id_busca = int(input("\nInforme o ID: "))
+        sql = "SELECT * FROM aluno WHERE id_aluno = %s"
 
+        cursor.execute(sql, (id_busca,))
+        resultado = cursor.fetchall()
+
+        if resultado:
+            print("\n-----Dados do aluno-----")
+            print(f"ID: {resultado[0][0]}")
+            print(f"1 - Nome: {resultado[0][1]}")
+            print(f"2 - Sobrenome: {resultado[0][2]}")
+            print(f"3 - Data de nascimento: {resultado[0][3]}")
+            print("-" * 40 + "\n")
+            escolha = int(input("Qual dado gostaria de atualizar: "))
+
+            if escolha == 1:
+                nome = input("Informe o nome:")
+                sql = "UPDATE aluno SET nome_aluno = %s WHERE id_aluno = %s"
+                valores = (nome, id_busca)
+                cursor.execute(sql, valores)
+                conexao.commit();
+
+            elif escolha == 2:
+                sobrenome = input("Informe o Sobrenome: ")
+                sql = "UPDATE aluno SET sobrenome_aluno = %s WHERE id_aluno = %s"
+                valores = (sobrenome, id_busca)
+                cursor.execute(sql, valores)
+                conexao.commit();
+
+            elif escolha == 3:
+                data_nascimento = input("Informe a data de nascimento (DD/MM/AAAA): ")
+                sql = "UPDATE aluno SET data_nascimento= %s WHERE id_aluno = %s"
+                data_nascimento_mysql = datetime.strptime(data_nascimento, "%d/%m/%Y").strftime("%Y-%m-%d")
+                valores = (data_nascimento_mysql, id_busca)
+                cursor.execute(sql, valores)
+                conexao.commit();
+            else:
+                print("Nenhuma opção válida")
+
+
+        cursor.close()
+
+    elif seletor == 5:
+        cursor = conexao.cursor();
+        print("\n -----DELETAR ALUNO-----")
+        id_busca = int(input("Informe o ID do aluno: "))
+        sql = "SELECT * FROM aluno WHERE id_aluno = %s"
+
+        cursor.execute(sql, (id_busca,))
+        resultado = cursor.fetchall()
+
+        if resultado:
+            print("\n-----Dados do aluno-----")
+            print(f"ID: {resultado[0][0]}")
+            print(f"Nome: {resultado[0][1]}")
+            print(f"Sobrenome: {resultado[0][2]}")
+            print(f"Data de nascimento: {resultado[0][3]}")
+            print("-" * 40 + "\n")
+            escolha = input("Gostaria mesmo de DELETAR(s/n): ")
+            
+            if escolha == "s":
+                sql = "DELETE FROM aluno WHERE id_aluno = %s"
+                cursor.execute(sql, (id_busca,))
+                conexao.commit();
+                print("\nALUNO APAGADO!\n")
+            else:
+                print("\nOPERAÇÃO CANCELADA!\n")
+        else:
+            print("\nAluno não encontrado!\n")
+        cursor.close()   
     elif seletor == 0:
         # Fechar a conexão (boa prática)
         conexao.close()

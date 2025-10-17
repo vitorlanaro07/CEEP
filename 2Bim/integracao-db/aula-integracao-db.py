@@ -34,10 +34,10 @@ while seletor != 0: #enquanto o seletor for diferente de 0, fique aqui ->
         sobrenome = input("Qual o sobrenome do aluno:")
         data_nascimento = input("Qual a data de nascimento do aluno (DD/MM/AAAA): ")
         
-        # Converter a data para o formato correto (AAAA-MM-DD) para (DD/MM/AAAA)
+        # Converter a data para o formato correto (DD/MM/AAAA) para (AAAA-MM-DD) 
         data_nascimento_mysql = datetime.strptime(data_nascimento, "%d/%m/%Y").strftime("%Y-%m-%d")
 
-        #comando para ser executado no SQL
+        #comando para ser executado no SQL: inserindo o aluno criado no DB
         sql = "INSERT INTO aluno (nome_aluno, sobrenome_aluno, data_nascimento) VALUES (%s, %s, %s)"
         
         #valores a serem substituídos aos declaros acima como "(%s, %s, %s)"
